@@ -8,23 +8,14 @@ README FILE
 - I started learning code with PHP because I never coded with that languaje.
 	
 - For "how to install Behat"; I went to the oficial documentation page and I got these steps:
-	yum install php
-	git clone git://github.com/Behat/Behat.git && cd Behat
-	wget -nc https://getcomposer.org/composer.phar
-	php composer.phar install
+	curl -sS https://getcomposer.org/installer | php
+    php composer.phar require behat/behat='~3.0.6'
 
-Erros found:
-  Error 1:
-    - The requested PHP extension ext-mbstring * is missing from your system.
-  Error 2:
-    - phpunit/phpunit 4.8.9 requires ext-dom * -> the requested PHP extension dom is missing from your system.
-to solve Error 1:
-	yum install php-mbstring
-to solve Error 2:
-	yum install php-dom
-
-Finally I installed with:
-	php composer.phar install
+Solutions for posible issues during installation:
+  - The requested PHP extension ext-mbstring * is missing from your system.
+		yum install php-mbstring
+  - phpunit/phpunit 4.8.9 requires ext-dom * -> the requested PHP extension dom is missing from your system.
+		yum install php-dom
 
 Features and scenarios creation:
 	Once Behat was installed, I created one feature for each API rest to test (PUT, GET, DELETE and GET using UUID).
