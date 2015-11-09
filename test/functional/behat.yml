@@ -1,0 +1,9 @@
+default:
+    autoload:
+            - %paths.base%/
+    suites:
+        test:
+            paths:
+                - %paths.base%/features
+            contexts:
+                - Vendor\Features\FeatureContext
