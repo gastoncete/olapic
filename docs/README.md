@@ -19,10 +19,10 @@ I went to the oficial documentation page and I got these steps:
 - `./composer.phar global require fabpot/php-cs-fixer`
 
 ### Solutions for posible issues during installation:
-- The requested PHP extension ext-mbstring * is missing from your system.
-		`yum install php-mbstring`
-- phpunit/phpunit 4.8.9 requires ext-dom * -> the requested PHP extension dom is missing from your system.
-		`yum install php-dom`
+* The requested PHP extension ext-mbstring * is missing from your system.
+	* `yum install php-mbstring`
+* "phpunit/phpunit 4.8.9 requires ext-dom * -> the requested PHP extension dom is missing from your system."
+	* `yum install php-dom`
 
 ## Features and scenarios creation
 Once Behat was installed, I created one feature for each API rest to test (PUT, GET, DELETE and GET using UUID).
