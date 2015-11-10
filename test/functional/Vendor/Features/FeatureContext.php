@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Vendor\Features;
 
@@ -18,9 +18,9 @@ class FeatureContext implements Context, SnippetAcceptingContext
     private $uuid;
     private $Generic;
 
-    public function __construct()
+    public function __construct($commonPath)
     {
-        $this->genericPath = 'http://uk9c0jvb9f6nvxvhursp.olapic.com/v1/places';
+        $this->genericPath = $commonPath;
         $this->sonarPath = "$this->genericPath/sonar";
         $this->Generic = new ProviderPlaceService($this->Generic);
     }
@@ -58,16 +58,18 @@ class FeatureContext implements Context, SnippetAcceptingContext
      */
     public function alreadyExistsPlace($providerName, $providerPlaceId)
     {
-        $exists = $this->Generic->ExistProviderPlaceId($providerName, $providerPlaceId, $this->genericPath);
+        $exists = $this->Generic->existProviderPlaceId($providerName, $providerPlaceId, $this->genericPath);
         if ($exists != 1) {
             $this->createPlace($providerName, $providerPlaceId, $this->genericPath);
         }
         $this->createPlace($providerName, $providerPlaceId, $this->genericPath);
-        $this->uuid = $this->createResponse['data']['id'];
+       // $this->uuid = $this->createResponse['data']['id'];
+       $jsonResponse = json_decode($this->createResponse);
+        $this->uuid = $jsonResponse->data->id;
     }
 
     /**
-     * @Then the place was created
+     * @Then the place is created
      */
     public function validateResponseCreated()
     {

@@ -6,4 +6,5 @@ default:
             paths:
                 - %paths.base%/features
             contexts:
-                - Vendor\Features\FeatureContext
+                - Vendor\Features\FeatureContext:
+				    commonPath: 'http://uk9c0jvb9f6nvxvhursp.olapic.com/v1/places'

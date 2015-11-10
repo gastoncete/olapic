@@ -2,6 +2,8 @@
 
 namespace Vendor\Features;
 
+use Exception;
+
 class ProviderPlaceService
 {
     private $RestClient;
@@ -12,7 +14,7 @@ class ProviderPlaceService
         $this->RestClient = new RestClient($this->RestClient);
     }
 
-    public function ExistProviderPlaceId($providerName, $providerPlaceId, $path)
+    public function existProviderPlaceId($providerName, $providerPlaceId, $path)
     {
         $this->getProviderPlaceId($providerName, $providerPlaceId, $path);
         if ($this->jsonResponse['meta']['code'] == 200) {
@@ -24,54 +26,89 @@ class ProviderPlaceService
 
     public function deleteProviderPlaceId($providerName, $providerPlaceId, $path)
     {
-        $deleteResponse = $this->RestClient->rest_call("DELETE", "$path/$providerName/$providerPlaceId");
-        $this->jsonResponse = json_decode($deleteResponse, true);
+       // $deleteResponse = $this->RestClient->rest_call("DELETE", "$path/$providerName/$providerPlaceId");
+       // $this->jsonResponse = json_decode($deleteResponse, true);
 
-        return $this->jsonResponse;
+        //return $this->jsonResponse;
+        
+        return $this->RestClient->rest_call("DELETE", "$path/$providerName/$providerPlaceId");
     }
 
     public function createProviderPlaceId($providerName, $providerPlaceId, $path)
     {
-        $createResponse = $this->RestClient->rest_call("PUT", "$path/$providerName/$providerPlaceId");
-        $this->jsonResponse = json_decode($createResponse, true);
+       // $createResponse = $this->RestClient->rest_call("PUT", "$path/$providerName/$providerPlaceId");
+       // $this->jsonResponse = json_decode($createResponse, true);
 
-        return $this->jsonResponse;
+        //return $this->jsonResponse;
+        
+        return $this->RestClient->rest_call("PUT", "$path/$providerName/$providerPlaceId");
     }
 
     public function getProviderPlaceId($providerName, $providerPlaceId, $path)
     {
-        $getResponseUUID = $this->RestClient->rest_call("GET", "$path/$providerName/$providerPlaceId");
-        $this->jsonResponse = json_decode($getResponseUUID, true);
+       // $getResponseUUID = $this->RestClient->rest_call("GET", "$path/$providerName/$providerPlaceId");
+       // $this->jsonResponse = json_decode($getResponseUUID, true);
 
-        return $this->jsonResponse;
+        //return $this->jsonResponse;
+        
+        return $this->RestClient->rest_call("GET", "$path/$providerName/$providerPlaceId");
     }
 
     public function getProviderPlaceIdWithUUID($uuid, $path)
     {
-        $getResponse = $this->RestClient->rest_call("GET", "$path/$uuid");
-        $this->jsonResponse = json_decode($getResponse, true);
+        //$getResponse = $this->RestClient->rest_call("GET", "$path/$uuid");
+        //$this->jsonResponse = json_decode($getResponse, true);
 
-        return $this->jsonResponse;
+        //return $this->jsonResponse;
+        
+        return $this->RestClient->rest_call("GET", "$path/$uuid");
     }
 
     public function statusCodeOk($response)
     {
-        if ($response['meta']['code'] != 200) {
-            throw new Exception("An error occurs; code: $response->meta->code, error: $response->meta->error ");
+        $this->decodeJsonResponse($response);
+        if ($this->jsonResponse->meta->code != 200)
+        {
+            print("Expected code: 200 but was:" .$this->jsonResponse->meta->code);
+            if (isset($this->jsonResponse->meta->error))
+            {
+               print("Error:" .$this->jsonResponse->meta->error);
+            }
+            throw new Exception("An error occurs on obtaining the place.");
+            
         }
     }
 
     public function statusCodeCreated($response)
     {
-        if ($response['meta']['code'] != 201) {
-            throw new Exception("An error occurs on creation; code: $response->meta->code, error: $response->meta->error");
+        $this->decodeJsonResponse($response);
+        if ($this->jsonResponse->meta->code != 201)
+        {
+            print("Expected code: 201 but was:" .$this->jsonResponse->meta->code);
+            if (isset($this->jsonResponse->meta->error))
+            {
+               print("Error:" .$this->jsonResponse->meta->error);
+            }
+            throw new Exception("An error occurs on place creation.");
         }
     }
 
     public function statusCodeNotFound($response)
     {
-        if ($response['meta']['code'] != 404) {
-            throw new Exception("An error occurs on search; code: $response->meta->code, error: $response->meta->error");
+        $this->decodeJsonResponse($response);
+        if ($this->jsonResponse->meta->code != 404)
+        {
+            print("Expected code: 404 but was:" .$this->jsonResponse->meta->code);
+            if (isset($this->jsonResponse->meta->error))
+            {
+               print("Error:" .$this->jsonResponse->meta->error);
+            }
+            throw new Exception("An error occurs on searching the place.");
         }
+    }
+    
+    private function decodeJsonResponse($response)
+    {
+        return $this->jsonResponse = json_decode($response);
     }
 }
