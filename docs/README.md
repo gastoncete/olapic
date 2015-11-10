@@ -12,11 +12,11 @@ I read and researched how to code with PHP *(I never coded with that languaje)*.
 ## Installation
 ### How to install Behat:
 I went to the oficial documentation page and I got these steps:
--`curl -sS https://getcomposer.org/installer | php`
--`php composer.phar require behat/behat='~3.0.6'`
+- `curl -sS https://getcomposer.org/installer | php`
+- `php composer.phar require behat/behat='~3.0.6'`
 
 ### How to install PHP Coding Standards Fixer:
--`./composer.phar global require fabpot/php-cs-fixer`
+- `./composer.phar global require fabpot/php-cs-fixer`
 
 ### Solutions for posible issues during installation:
 - The requested PHP extension ext-mbstring * is missing from your system.
@@ -37,10 +37,10 @@ The idea is to have a clear code and could find quickly and easily the functions
 
 ###Running Behat scenarios:
 *go to functional folder and run*
-1. For run all scenarios and features:
-`../../bin/behat`
-2. For run all scenarios for a particular feature:
-`../../bin/behat --tags=<get | put | delete | uuid>`
+* For run all scenarios and features:
+ `../../bin/behat`
+* For run all scenarios for a particular feature:
+ `../../bin/behat --tags=<get | put | delete | uuid>`
 
 
 ## To finish 
