@@ -7,4 +7,4 @@ default:
                 - %paths.base%/features
             contexts:
                 - Vendor\Features\FeatureContext:
-				    commonPath: 'http://uk9c0jvb9f6nvxvhursp.olapic.com/v1/places'
+                    paramCommonPath: 'http://uk9c0jvb9f6nvxvhursp.olapic.com/v1/places'

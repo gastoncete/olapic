@@ -6,23 +6,25 @@ include 'ProviderPlaceService.php';
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
+use Exception;
 
 class FeatureContext implements Context, SnippetAcceptingContext
 {
 
-    private $genericPath;
+    private $paramCommonPath;
+    private $param_places;
     private $sonarPath;
     private $getResponse;
     private $deleteResponse;
     private $createResponse;
     private $uuid;
-    private $Generic;
+    private $providerPlaceService;
 
-    public function __construct($commonPath)
+    public function __construct($paramCommonPath)
     {
-        $this->genericPath = $commonPath;
-        $this->sonarPath = "$this->genericPath/sonar";
-        $this->Generic = new ProviderPlaceService($this->Generic);
+        $this->paramCommonPath = $paramCommonPath;
+        $this->sonarPath = "$this->paramCommonPath/sonar";
+        $this->providerPlaceService = new ProviderPlaceService($this->providerPlaceService);
     }
 
     /**
@@ -30,11 +32,11 @@ class FeatureContext implements Context, SnippetAcceptingContext
      */
     public function validatePlace($providerName, $providerPlaceId)
     {
-        $exists = $this->Generic->ExistProviderPlaceId($providerName, $providerPlaceId, $this->genericPath);
+        $exists = $this->providerPlaceService->existProviderPlaceId($providerName, $providerPlaceId, $this->paramCommonPath);
         if ($exists == 1) {
-            $this->deletePlace($providerName, $providerPlaceId, $this->genericPath);
+            $this->deletePlace($providerName, $providerPlaceId, $this->paramCommonPath);
         }
-        $this->createPlace($providerName, $providerPlaceId, $this->genericPath);
+        $this->createPlace($providerName, $providerPlaceId, $this->paramCommonPath);
     }
 
     /**
@@ -42,7 +44,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
      */
     public function deletePlaceId($providerName, $providerPlaceId)
     {
-        $this->deletePlace($providerName, $providerPlaceId, $this->genericPath);
+        $this->deletePlace($providerName, $providerPlaceId, $this->paramCommonPath);
     }
 
     /**
@@ -50,7 +52,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
      */
     public function getPlaceId($providerName, $providerPlaceId)
     {
-        $this->getResponse = $this->Generic->getProviderPlaceId($providerName, $providerPlaceId, $this->genericPath);
+        $this->getResponse = $this->providerPlaceService->getProviderPlaceId($providerName, $providerPlaceId, $this->paramCommonPath);
     }
 
     /**
@@ -58,13 +60,13 @@ class FeatureContext implements Context, SnippetAcceptingContext
      */
     public function alreadyExistsPlace($providerName, $providerPlaceId)
     {
-        $exists = $this->Generic->existProviderPlaceId($providerName, $providerPlaceId, $this->genericPath);
+        $exists = $this->providerPlaceService->existProviderPlaceId($providerName, $providerPlaceId, $this->paramCommonPath);
         if ($exists != 1) {
-            $this->createPlace($providerName, $providerPlaceId, $this->genericPath);
+            $this->createPlace($providerName, $providerPlaceId, $this->paramCommonPath);
         }
-        $this->createPlace($providerName, $providerPlaceId, $this->genericPath);
-       // $this->uuid = $this->createResponse['data']['id'];
-       $jsonResponse = json_decode($this->createResponse);
+        $this->createPlace($providerName, $providerPlaceId, $this->paramCommonPath);
+        // $this->uuid = $this->createResponse['data']['id'];
+        $jsonResponse = json_decode($this->createResponse);
         $this->uuid = $jsonResponse->data->id;
     }
 
@@ -73,7 +75,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
      */
     public function validateResponseCreated()
     {
-        $this->Generic->statusCodeCreated($this->createResponse);
+        $this->providerPlaceService->statusCodeCreated($this->createResponse);
     }
 
     /**
@@ -81,7 +83,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
      */
     public function validateResponseError()
     {
-        $this->Generic->statusCodeNotFound($this->createResponse);
+        $this->providerPlaceService->statusCodeNotFound($this->createResponse);
     }
 
     /**
@@ -89,7 +91,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
      */
     public function validateResponseExists()
     {
-        $this->Generic->statusCodeOk($this->createResponse);
+        $this->providerPlaceService->statusCodeOk($this->createResponse);
     }
 
     /**
@@ -97,7 +99,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
      */
     public function validateDeletion()
     {
-        $this->Generic->statusCodeOk($this->deleteResponse);
+        $this->providerPlaceService->statusCodeOk($this->deleteResponse);
     }
 
     /**
@@ -105,7 +107,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
      */
     public function validateErrorOnDelete()
     {
-        $this->Generic->statusCodeNotFound($this->deleteResponse);
+        $this->providerPlaceService->statusCodeNotFound($this->deleteResponse);
     }
 
     /**
@@ -113,7 +115,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
      */
     public function validateGetOk()
     {
-        $this->Generic->statusCodeOk($this->getResponse);
+        $this->providerPlaceService->statusCodeOk($this->getResponse);
     }
 
     /**
@@ -121,7 +123,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
      */
     public function validateGetError()
     {
-        $this->Generic->statusCodeNotFound($this->getResponse);
+        $this->providerPlaceService->statusCodeNotFound($this->getResponse);
     }
 
     /**
@@ -129,7 +131,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
      */
     public function obtainFromUUID()
     {
-        $this->getResponse = $this->Generic->getProviderPlaceIdWithUUID($this->uuid, $this->sonarPath);
+        $this->getResponse = $this->providerPlaceService->getProviderPlaceIdWithUUID($this->uuid, $this->sonarPath);
     }
 
     /**
@@ -141,13 +143,78 @@ class FeatureContext implements Context, SnippetAcceptingContext
         $this->obtainFromUUID();
     }
 
+    /**
+     * @Then the provider_hash value returned is :arg1
+     */
+    public function validateProviderHash($providerHash)
+    {
+        $response = $this->providerPlaceService->decodeJsonResponse($this->getResponse);
+        if (isset($response->data->provider_hash)) {
+            $this->providerPlaceService->validateValues($providerHash, $response->data->provider_hash);
+        } else {
+            throw new Exception("The provider_hash value is not in the response!");
+        }
+    }
+
+    /**
+     * @Then the provider_id value returned is :arg1
+     */
+    public function validateProviderId($providerId)
+    {
+        $response = $this->providerPlaceService->decodeJsonResponse($this->getResponse);
+        if (isset($response->data->provider_id)) {
+            $this->providerPlaceService->validateValues($providerId, $response->data->provider_id);
+        } else {
+            throw new Exception("The provider_id value is not in the response!");
+        }
+    }
+
+    /**
+     * @Then the provider_name value returned is :arg1
+     */
+    public function validateProviderName($providerName)
+    {
+        $response = $this->providerPlaceService->decodeJsonResponse($this->getResponse);
+        if (isset($response->data->provider_name)) {
+            $this->providerPlaceService->validateValues($providerName, $response->data->provider_name);
+        } else {
+            throw new Exception("The provider_name value is not in the response!");
+        }
+    }
+
+    /**
+     * @Then the place name value returned is :arg1
+     */
+    public function validatePlaceName($placeName)
+    {
+        $response = $this->providerPlaceService->decodeJsonResponse($this->getResponse);
+        if (isset($response->data->name)) {
+            $this->providerPlaceService->validateValues($placeName, $response->data->name);
+        } else {
+            throw new Exception("The name value is not in the response!");
+        }
+    }
+
+    /**
+     * @Then the place url value returned is :arg1
+     */
+    public function validatePlaceUrl($placeUrl)
+    {
+        $response = $this->providerPlaceService->decodeJsonResponse($this->getResponse);
+        if (isset($response->data->url)) {
+            $this->providerPlaceService->validateValues($placeUrl, $response->data->url);
+        } else {
+            throw new Exception("The url value is not in the response!");
+        }
+    }
+
     private function createPlace($providerName, $providerPlaceId, $path)
     {
-        $this->createResponse = $this->Generic->createProviderPlaceId($providerName, $providerPlaceId, $path);
+        $this->createResponse = $this->providerPlaceService->createProviderPlaceId($providerName, $providerPlaceId, $path);
     }
 
     private function deletePlace($providerName, $providerPlaceId, $path)
     {
-        $this->deleteResponse = $this->Generic->deleteProviderPlaceId($providerName, $providerPlaceId, $path);
+        $this->deleteResponse = $this->providerPlaceService->deleteProviderPlaceId($providerName, $providerPlaceId, $path);
     }
 }

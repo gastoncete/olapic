@@ -18,8 +18,11 @@ I went to the oficial documentation page and I got these steps:
 ### How to install PHP Coding Standards Fixer:
 - `./composer.phar global require fabpot/php-cs-fixer`
 
+### How to install assertions tool:
+- `./php composer.phar require --dev phpunit/phpunit='~4.1.0'`
+
 ### Solutions for posible issues during installation:
-* The requested PHP extension ext-mbstring * is missing from your system.
+* "The requested PHP extension ext-mbstring * is missing from your system."
 	* `yum install php-mbstring`
 * "phpunit/phpunit 4.8.9 requires ext-dom * -> the requested PHP extension dom is missing from your system."
 	* `yum install php-dom`

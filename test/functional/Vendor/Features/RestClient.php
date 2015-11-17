@@ -2,6 +2,8 @@
 
 namespace Vendor\Features;
 
+use Exception;
+
 class RestClient
 {
     private $response;
