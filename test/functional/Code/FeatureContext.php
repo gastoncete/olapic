@@ -1,6 +1,6 @@
 <?php
 
-namespace Vendor\Features;
+namespace code;
 
 include 'ProviderPlaceService.php';
 
@@ -12,7 +12,6 @@ class FeatureContext implements Context, SnippetAcceptingContext
 {
 
     private $paramCommonPath;
-    private $param_places;
     private $sonarPath;
     private $getResponse;
     private $deleteResponse;
@@ -48,7 +47,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
     }
 
     /**
-     * @When the I ask for the place for provider :providerName with id :providerPlaceId
+     * @When the place for provider :providerName with id :providerPlaceId is asked
      */
     public function getPlaceId($providerName, $providerPlaceId)
     {
@@ -144,76 +143,109 @@ class FeatureContext implements Context, SnippetAcceptingContext
     }
 
     /**
-     * @Then the provider_hash value returned is :arg1
+     * @Then the provider_hash value returned is :arg1 for :arg2 response
      */
-    public function validateProviderHash($providerHash)
+    public function validateProviderHash($providerHash, $method)
     {
-        $response = $this->providerPlaceService->decodeJsonResponse($this->getResponse);
-        if (isset($response->data->provider_hash)) {
-            $this->providerPlaceService->validateValues($providerHash, $response->data->provider_hash);
+        $getJson = $this->providerPlaceService->decodeJsonResponse($this->getResponse);
+        $createJson = $this->providerPlaceService->decodeJsonResponse($this->createResponse);
+
+        if ($method === "get") {
+            $this->providerPlaceService->validateValues($providerHash, $getJson->data->provider_hash);
         } else {
-            throw new Exception("The provider_hash value is not in the response!");
+            $this->providerPlaceService->validateValues($providerHash, $createJson->data->source->provider_hash);
+        }
+    }
+
+
+    /**
+     * @Then the provider_id value returned is :arg1 for :arg2 response
+     */
+    public
+    function validateProviderId($providerId, $method)
+    {
+        $getJson = $this->providerPlaceService->decodeJsonResponse($this->getResponse);
+        $createJson = $this->providerPlaceService->decodeJsonResponse($this->createResponse);
+
+        if ($method === "get") {
+            $this->providerPlaceService->validateValues($providerId, $getJson->data->provider_id);
+        } else {
+            $this->providerPlaceService->validateValues($providerId, $createJson->data->source->provider_id);
         }
     }
 
     /**
-     * @Then the provider_id value returned is :arg1
+     * @Then the provider_name value returned is :arg1 for :arg2 response
      */
-    public function validateProviderId($providerId)
+    public
+    function validateProviderName($providerName, $method)
     {
-        $response = $this->providerPlaceService->decodeJsonResponse($this->getResponse);
-        if (isset($response->data->provider_id)) {
-            $this->providerPlaceService->validateValues($providerId, $response->data->provider_id);
+        $getJson = $this->providerPlaceService->decodeJsonResponse($this->getResponse);
+        $createJson = $this->providerPlaceService->decodeJsonResponse($this->createResponse);
+
+        if ($method === "get") {
+            $this->providerPlaceService->validateValues($providerName, $getJson->data->provider_name);
         } else {
-            throw new Exception("The provider_id value is not in the response!");
+            $this->providerPlaceService->validateValues($providerName, $createJson->data->source->provider_name);
         }
     }
 
     /**
-     * @Then the provider_name value returned is :arg1
+     * @Then the place name value returned is :arg1 for :arg2 response
      */
-    public function validateProviderName($providerName)
+    public
+    function validatePlaceName($placeName, $method)
     {
-        $response = $this->providerPlaceService->decodeJsonResponse($this->getResponse);
-        if (isset($response->data->provider_name)) {
-            $this->providerPlaceService->validateValues($providerName, $response->data->provider_name);
+        $getJson = $this->providerPlaceService->decodeJsonResponse($this->getResponse);
+        $createJson = $this->providerPlaceService->decodeJsonResponse($this->createResponse);
+
+        if ($method === "get") {
+            $this->providerPlaceService->validateValues($placeName, $getJson->data->name);
         } else {
-            throw new Exception("The provider_name value is not in the response!");
+            $this->providerPlaceService->validateValues($placeName, $createJson->data->source->name);
+            $this->providerPlaceService->validateValues($placeName, $createJson->data->name);
         }
     }
 
     /**
-     * @Then the place name value returned is :arg1
+     * @Then the place url value returned is :arg1 for :arg2 response
      */
-    public function validatePlaceName($placeName)
+    public
+    function validatePlaceUrl($placeUrl, $method)
     {
-        $response = $this->providerPlaceService->decodeJsonResponse($this->getResponse);
-        if (isset($response->data->name)) {
-            $this->providerPlaceService->validateValues($placeName, $response->data->name);
+        $getJson = $this->providerPlaceService->decodeJsonResponse($this->getResponse);
+        $createJson = $this->providerPlaceService->decodeJsonResponse($this->createResponse);
+
+        if ($method === "get") {
+            $this->providerPlaceService->validateValues($placeUrl, $getJson->data->url);
         } else {
-            throw new Exception("The name value is not in the response!");
+            $this->providerPlaceService->validateValues($placeUrl, $createJson->data->source->url);
+            $this->providerPlaceService->validateValues($placeUrl, $createJson->data->url);
         }
     }
 
     /**
-     * @Then the place url value returned is :arg1
+     * @Then the provider_id value returned is a valid UUID
      */
-    public function validatePlaceUrl($placeUrl)
+    public
+    function validateProviderUUID()
     {
-        $response = $this->providerPlaceService->decodeJsonResponse($this->getResponse);
-        if (isset($response->data->url)) {
-            $this->providerPlaceService->validateValues($placeUrl, $response->data->url);
+        $response = $this->providerPlaceService->decodeJsonResponse($this->createResponse);
+        if (isset($response->data->id)) {
+            $this->providerPlaceService->validateUuid($response->data->id);
         } else {
-            throw new Exception("The url value is not in the response!");
+            throw new Exception("The UUID value is not in the response!");
         }
     }
 
-    private function createPlace($providerName, $providerPlaceId, $path)
+    private
+    function createPlace($providerName, $providerPlaceId, $path)
     {
         $this->createResponse = $this->providerPlaceService->createProviderPlaceId($providerName, $providerPlaceId, $path);
     }
 
-    private function deletePlace($providerName, $providerPlaceId, $path)
+    private
+    function deletePlace($providerName, $providerPlaceId, $path)
     {
         $this->deleteResponse = $this->providerPlaceService->deleteProviderPlaceId($providerName, $providerPlaceId, $path);
     }

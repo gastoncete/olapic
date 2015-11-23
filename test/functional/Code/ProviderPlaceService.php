@@ -1,6 +1,6 @@
 <?php
 
-namespace Vendor\Features;
+namespace code;
 
 use Exception;
 use PHPUnit_Framework_Assert as Assertion;
@@ -52,9 +52,9 @@ class ProviderPlaceService
         if ($this->jsonResponse->meta->code != 200) {
             print("Expected code: 200 but was:" . $this->jsonResponse->meta->code . "\n");
             if (isset($this->jsonResponse->meta->error)) {
-                print("Error:" . $this->jsonResponse->meta->error . "\n");
+                print("Error:" . $this->jsonResponse->meta->error);
             }
-            throw new Exception("An error occurs on obtaining the place.");
+            throw new Exception("An error occurs!. The place was not returned");
 
         }
     }
@@ -67,7 +67,7 @@ class ProviderPlaceService
             if (isset($this->jsonResponse->meta->error)) {
                 print("Error:" . $this->jsonResponse->meta->error);
             }
-            throw new Exception("An error occurs on place creation.");
+            throw new Exception("An error occurs!. The place was not created");
         }
     }
 
@@ -79,7 +79,7 @@ class ProviderPlaceService
             if (isset($this->jsonResponse->meta->error)) {
                 print("Error:" . $this->jsonResponse->meta->error);
             }
-            throw new Exception("An error occurs on searching the place.");
+            throw new Exception("An error occurs! The place shouldn't exists but was returned.");
         }
     }
 
@@ -93,7 +93,7 @@ class ProviderPlaceService
 
     public function validateValues($expectedValue, $actualValue)
     {
-        Assertion::assertEquals($expectedValue, $actualValue);
+        Assertion::assertEquals($expectedValue, $actualValue, "Assertion fails. Expected: ". $expectedValue . ", Actual: " . $actualValue);
     }
 
     public function validateUrl($expectedUrl, $actualUrl)

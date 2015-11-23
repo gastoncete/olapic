@@ -1,6 +1,6 @@
 <?php
 
-namespace Vendor\Features;
+namespace code;
 
 use Exception;
 
