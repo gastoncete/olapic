@@ -161,8 +161,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
     /**
      * @Then the provider_id value returned is :arg1 for :arg2 response
      */
-    public
-    function validateProviderId($providerId, $method)
+    public function validateProviderId($providerId, $method)
     {
         $getJson = $this->providerPlaceService->decodeJsonResponse($this->getResponse);
         $createJson = $this->providerPlaceService->decodeJsonResponse($this->createResponse);
@@ -177,8 +176,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
     /**
      * @Then the provider_name value returned is :arg1 for :arg2 response
      */
-    public
-    function validateProviderName($providerName, $method)
+    public function validateProviderName($providerName, $method)
     {
         $getJson = $this->providerPlaceService->decodeJsonResponse($this->getResponse);
         $createJson = $this->providerPlaceService->decodeJsonResponse($this->createResponse);
@@ -193,8 +191,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
     /**
      * @Then the place name value returned is :arg1 for :arg2 response
      */
-    public
-    function validatePlaceName($placeName, $method)
+    public function validatePlaceName($placeName, $method)
     {
         $getJson = $this->providerPlaceService->decodeJsonResponse($this->getResponse);
         $createJson = $this->providerPlaceService->decodeJsonResponse($this->createResponse);
@@ -210,8 +207,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
     /**
      * @Then the place url value returned is :arg1 for :arg2 response
      */
-    public
-    function validatePlaceUrl($placeUrl, $method)
+    public function validatePlaceUrl($placeUrl, $method)
     {
         $getJson = $this->providerPlaceService->decodeJsonResponse($this->getResponse);
         $createJson = $this->providerPlaceService->decodeJsonResponse($this->createResponse);
@@ -227,8 +223,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
     /**
      * @Then the provider_id value returned is a valid UUID
      */
-    public
-    function validateProviderUUID()
+    public function validateProviderUUID()
     {
         $response = $this->providerPlaceService->decodeJsonResponse($this->createResponse);
         if (isset($response->data->id)) {
@@ -238,14 +233,14 @@ class FeatureContext implements Context, SnippetAcceptingContext
         }
     }
 
-    private
-    function createPlace($providerName, $providerPlaceId, $path)
+    
+    private function createPlace($providerName, $providerPlaceId, $path)
     {
         $this->createResponse = $this->providerPlaceService->createProviderPlaceId($providerName, $providerPlaceId, $path);
     }
 
-    private
-    function deletePlace($providerName, $providerPlaceId, $path)
+    
+    private function deletePlace($providerName, $providerPlaceId, $path)
     {
         $this->deleteResponse = $this->providerPlaceService->deleteProviderPlaceId($providerName, $providerPlaceId, $path);
     }

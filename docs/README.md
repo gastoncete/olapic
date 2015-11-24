@@ -36,7 +36,7 @@ The idea is to have a clear code and could find quickly and easily the functions
 
 ## Usage
 ### Running PHP Coding Standards Fixer:
-`php php-cs-fixer fix Vendor/Features --level=psr2`
+`php php-cs-fixer fix code/ --level=psr2`
 
 ###Running Behat scenarios:
 *go to functional folder and run*
