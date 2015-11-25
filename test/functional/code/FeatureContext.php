@@ -2,8 +2,6 @@
 
 namespace code;
 
-include 'ProviderPlaceService.php';
-
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Exception;
